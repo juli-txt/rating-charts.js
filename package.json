@@ -1,0 +1,21 @@
+{
+  "name": "rating-charts.js",
+  "version": "1.0.1",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juli-txt/RatingCharts.js.git"
+  },
+  "author": "Julian Manz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juli-txt/RatingCharts.js/issues"
+  },
+  "homepage": "https://github.com/juli-txt/RatingCharts.js#readme",
+  "description": "",
+  "exports": "./index.js"
+}
