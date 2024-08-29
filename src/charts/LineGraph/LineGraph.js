@@ -1,0 +1,372 @@
+import * as d3 from "d3";
+import { getTooltip, hideTooltip, showTooltip } from "../../utils";
+
+/**
+ * Renders a line graph.
+ *
+ * @param {object[]} data - The rating data to be displayed in the graph. Contains the timestamp, value and deviation.
+ * @param {number} data[].value - The rating value to be displayed in the graph.
+ * @param {number=} data[].deviation - The rating deviation to be displayed in the graph.
+ * @param {Date} data[].timestamp - The timestamp of the rating to be displayed in the graph.
+ * @param {number} minRatingValue - The minimum value of the rating for the y-axis.
+ * @param {object} options - The options for the graph.
+ * @param {string} options.selector - The selector to render the graph in a div.
+ * @param {string=} options.color - The color of the graph.
+ * @param {object} options.margins - The margins of the graph.
+ * @param {number=} options.margins.marginBottom - The bottom margin of the graph.
+ * @param {number=} options.margins.marginLeft - The left margin of the graph.
+ * @param {number=} options.margins.marginRight - The right margin of the graph.
+ * @param {number=} options.margins.marginTop - The top margin of the graph.
+ * @param {object} options.size - The size of the graph.
+ * @param {number=} options.size.height - The height of the graph.
+ * @param {number=} options.size.width - The width of the graph.
+ * @param {object} options.titles - The titles of the graph.
+ * @param {string=} options.titles.title - The general title of the graph.
+ * @param {string=} options.titles.xAxisTitle - The x-axis title of the graph.
+ * @param {string=} options.titles.yAxisTitle - The y-axis title of the graph.
+ * @param {object} options.tooltips - The tooltips of the graph to provide additional information.
+ * @param {() => string=} options.tooltips.setAreaTooltip - The function to set the tooltip for the area.
+ * @param {(_value: number, _deviation: number, _timestamp: string) => string=} options.tooltips.setDataTooltip - The function to set the tooltip for the data.
+ * @param {(_value: number, _timestamp: string) => string=} options.tooltips.setLowerDeviationTooltip - The function to set the tooltip for the lower deviation line.
+ * @param {(_value: number, _timestamp: string) => string=} options.tooltips.setUpperDeviationTooltip - The function to set the tooltip for the upper deviation line.
+ * @param {(_minValue: string, _maxValue: string) => string=} options.tooltips.setXAxisTooltip - The function to set the tooltip for the x-axis.
+ * @param {(_minValue: number, _maxValue: number) => string=} options.tooltips.setYAxisTooltip - The function to set the tooltip for the y-axis.
+ * @returns {void} - The line graph is rendered in the DOM.
+ */
+export function LineGraph(data, minRatingValue, options) {
+  /**
+   * Parameters.
+   */
+  // Destructure the parameters and initialize them with default values.
+  const {
+    selector,
+    color = "navy",
+    margins: {
+      marginTop = 40,
+      marginRight = 40,
+      marginBottom = 40,
+      marginLeft = 40,
+    } = {},
+    size: { width = 640, height = 400 } = {},
+    titles: { title = "", xAxisTitle = "", yAxisTitle = "" } = {},
+    tooltips: {
+      setAreaTooltip = () => "",
+      setDataTooltip = (_value, _deviation, _timestamp) => "",
+      setLowerDeviationTooltip = (_value, _timestamp) => "",
+      setUpperDeviationTooltip = (_value, _timestamp) => "",
+      setXAxisTooltip = (_minValue, _maxValue) => "",
+      setYAxisTooltip = (_minValue, _maxValue) => "",
+    } = {},
+  } = options;
+
+  /**
+   * SVG container.
+   */
+  // Remove any existing graph.
+  const container = d3.select(selector);
+  container.selectAll("*").remove();
+
+  // Create the SVG element.
+  const svg = container
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  // Create the tooltip object.
+  // @ts-ignore
+  const tooltip = getTooltip(container);
+
+  /**
+   * x-axis.
+   */
+  // Label for the x-axis.
+  svg
+    .append("text") // text label for the x axis
+    .attr("x", width / 2)
+    .attr("y", height - marginBottom / 5)
+    .style("text-anchor", "middle")
+    .text(xAxisTitle)
+    .attr("font-family", "Georgia");
+
+  // Sort the data by timestamp ascending.
+  data.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+
+  // Get the start and end date from the data.
+  const startDate = data[0].timestamp;
+  const endDate = data[data.length - 1].timestamp;
+
+  // Format the x-scale.
+  const xScale = [
+    startDate.toISOString().substring(0, 10),
+    endDate.toISOString().substring(0, 10),
+  ].map((d) => d3.timeParse("%Y-%m-%d")(d));
+
+  // Create the horizontal scale.
+  const x = d3
+    .scaleTime()
+    // @ts-ignore
+    .domain(xScale)
+    .range([marginLeft, width - marginRight]);
+
+  // Add the x-axis.
+  svg
+    .append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0, ${height - marginBottom})`)
+    .call(d3.axisBottom(x).tickFormat((d) => d3.timeFormat("%Y-%m-%d")(d)))
+    .attr("font-family", "Georgia")
+    .on("mouseover", (event, _) =>
+      showTooltip(
+        tooltip,
+        event,
+        setXAxisTooltip(startDate.toISOString(), endDate.toISOString())
+      )
+    )
+    .on("mouseout", () => hideTooltip(tooltip));
+
+  // Label for the y-axis.
+  svg
+    .append("text")
+    .attr("x", marginLeft / 5)
+    .attr("y", marginTop / 1.25)
+    .style("text-anchor", "start")
+    .text(yAxisTitle)
+    .attr("font-family", "Georgia");
+
+  /**
+   * y-axis.
+   */
+  // Set deviation to 0 if it is not defined.
+  data.forEach((d) => {
+    if (!d.deviation) {
+      d.deviation = 0;
+    }
+  });
+
+  // Get the max value of the data.
+  // @ts-ignore
+  const maxRatingValue = d3.max(data, (d) => d.value + d.deviation);
+
+  // Create the vertical scale.
+  const y = d3
+    .scaleLinear()
+    // @ts-ignore
+    .domain([minRatingValue, maxRatingValue])
+    .range([height - marginBottom, marginTop]);
+
+  // Add the y-axis.
+  const yAxis = svg
+    .append("g")
+    .attr("class", "y-axis")
+    .attr("transform", `translate(${marginLeft}, 0)`)
+    .call(d3.axisLeft(y))
+    .attr("font-family", "Georgia")
+    .on("mouseover", (event, _) =>
+      showTooltip(
+        tooltip,
+        event,
+        // @ts-ignore
+        setYAxisTooltip(minRatingValue, maxRatingValue)
+      )
+    )
+    .on("mouseout", () => hideTooltip(tooltip));
+
+  // Get the number of ticks on the y-axis.
+  const yTicks = yAxis.selectAll(".tick").data();
+
+  // Add horizontal spectral lines.
+  svg
+    .selectAll("line.spectral")
+    .data(yTicks)
+    .enter()
+    .append("line")
+    .attr("x1", marginLeft)
+    .attr("x2", width - marginRight)
+    .attr("y1", (d) => y(d))
+    .attr("y2", (d) => y(d))
+    .attr("stroke", "gray")
+    .attr("stroke-width", 1)
+    .attr("opacity", 0.5);
+
+  /**
+   * Data visualization.
+   */
+  // Fill the area between the deviation lines.
+  svg
+    .append("path")
+    .attr("class", "area")
+    .datum(data)
+    .attr("fill", color)
+    .attr("stroke", color)
+    .attr("stroke-width", "1.5")
+    .attr("opacity", 0.2)
+    .attr(
+      "d",
+      // @ts-ignore
+      d3
+        .area()
+        // @ts-ignore
+        .x((d) => x(d.timestamp))
+        // @ts-ignore
+        .y0((d) => y(d.value - d.deviation))
+        // @ts-ignore
+        .y1((d) => y(d.value + d.deviation))
+        .curve(d3.curveLinear)
+    )
+    .on("mouseover", (event, _) =>
+      showTooltip(tooltip, event, setAreaTooltip())
+    )
+    .on("mouseout", () => hideTooltip(tooltip));
+
+  // Calculates the values for the line.
+  const valueLine = d3
+    .line()
+    // @ts-ignore
+    .x((d) => x(d.timestamp))
+    // @ts-ignore
+    .y((d) => y(d.value))
+    .curve(d3.curveLinear);
+
+  // Renders the line.
+  svg
+    .append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", "1.5")
+    .attr("opacity", 0.75)
+    // @ts-ignore
+    .attr("d", valueLine(data));
+
+  // Renders the data points.
+  svg
+    .selectAll("circle.value")
+    .data(data)
+    .join("circle")
+    .attr("class", "data-point")
+    .attr("cx", (d) => x(d.timestamp))
+    .attr("cy", (d) => y(d.value))
+    .attr("r", 3)
+    .attr("fill", color)
+    .attr("stroke", color)
+    .attr("stroke-width", "1")
+    .attr("opacity", 0.75)
+    .on("mouseover", (event, d) =>
+      showTooltip(
+        tooltip,
+        event,
+        // @ts-ignore
+        setDataTooltip(d.value, d.deviation, d.timestamp.toISOString())
+      )
+    )
+    .on("mouseout", () => hideTooltip(tooltip));
+
+  // Upper deviation line.
+  // Calculates the values for the upper deviation line.
+  const upperDeviationLine = d3
+    .line()
+    // @ts-ignore
+    .x((d) => x(d.timestamp))
+    // @ts-ignore
+    .y((d) => y(d.value + d.deviation))
+    .curve(d3.curveLinear);
+
+  // Renders the upper deviation line.
+  svg
+    .append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", "1.5")
+    .attr("opacity", 0.4)
+    // @ts-ignore
+    .attr("d", upperDeviationLine(data));
+
+  // Renders the upper deviation data points.
+  svg
+    .selectAll("circle.upper-deviation")
+    .data(data)
+    .join("circle")
+    .attr("class", "upper-deviation")
+    .attr("cx", (d) => x(d.timestamp))
+    // @ts-ignore
+    .attr("cy", (d) => y(d.value + d.deviation))
+    .attr("r", 3)
+    .attr("fill", color)
+    .attr("stroke", color)
+    .attr("stroke-width", "1")
+    .attr("opacity", 0.4)
+    .on("mouseover", (event, d) =>
+      showTooltip(
+        tooltip,
+        event,
+        setUpperDeviationTooltip(
+          // @ts-ignore
+          d.value + d.deviation,
+          d.timestamp.toISOString()
+        )
+      )
+    )
+    .on("mouseout", () => hideTooltip(tooltip));
+
+  // Lower deviation line.
+  // Calculates the values for the lower deviation line.
+  const lowerDeviationLine = d3
+    .line()
+    // @ts-ignore
+    .x((d) => x(d.timestamp))
+    // @ts-ignore
+    .y((d) => y(d.value - d.deviation))
+    .curve(d3.curveLinear);
+
+  // Renders the lower deviation line.
+  svg
+    .append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", "1.5")
+    .attr("opacity", 0.4)
+    // @ts-ignore
+    .attr("d", lowerDeviationLine(data));
+
+  // Renders the lower deviation data points.
+  svg
+    .selectAll("circle.lower-deviation")
+    .data(data)
+    .join("circle")
+    .attr("class", "lower-deviation")
+    .attr("cx", (d) => x(d.timestamp))
+    // @ts-ignore
+    .attr("cy", (d) => y(d.value - d.deviation))
+    .attr("r", 3)
+    .attr("fill", color)
+    .attr("stroke", color)
+    .attr("stroke-width", 1)
+    .attr("opacity", 0.4)
+    .on("mouseover", (event, d) =>
+      showTooltip(
+        tooltip,
+        event,
+        setLowerDeviationTooltip(
+          // @ts-ignore
+          d.value - d.deviation,
+          d.timestamp.toISOString()
+        )
+      )
+    )
+    .on("mouseout", () => hideTooltip(tooltip));
+
+  /**
+   * Title.
+   */
+  // Render the title of the graph.
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", marginTop / 3.25)
+    .attr("text-anchor", "middle")
+    .style("text-decoration", "underline")
+    .text(title)
+    .attr("font-family", "Georgia");
+}
