@@ -1,10 +1,12 @@
 import * as d3 from "d3";
-import { getTooltip, hideTooltip, showTooltip } from "../../utils";
 import {
+  getTooltip,
+  hideTooltip,
+  showTooltip,
   formatNumber,
   getDeviationColorValue,
   getTextWidth,
-} from "../../utils/utils";
+} from "../../utils";
 
 /**
  * Renders a rating value and rating deviation.
@@ -67,7 +69,7 @@ export function Rating(data, options) {
     .attr("height", height);
 
   // Create a tooltip.
-      // @ts-ignore
+  // @ts-ignore
   const tooltip = getTooltip(container);
 
   /**

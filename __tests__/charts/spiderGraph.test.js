@@ -1,126 +1,145 @@
-import { spiderGraph } from '../../Charts'
-import { fireEvent } from '@testing-library/dom'
+import { SpiderGraph } from "../../src/charts";
 
-describe('spiderGraph', () => {
-    const minValue = 0
-    const data = {
-        test1: 1,
-        test2: 2,
-        test3: 3,
-        test4: 4
-    }
+describe("SpiderGraph", () => {
+  const minValue = 0;
+  const data = {
+    test1: 1,
+    test2: 2,
+    test3: 3,
+    test4: 4,
+  };
 
-    const margins = {
-        marginTop: 0,
-        marginRight: 0,
-        marginBottom: 0,
-        marginLeft: 0
-    }
+  const margins = {
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+  };
 
-    const size = {
-        width: 100,
-        height: 100
-    }
+  const size = {
+    width: 100,
+    height: 100,
+  };
 
-    const setTooltip = (_concept, _value) => 'test'
-    const title = 'test'
+  const setTooltip = (_concept, _value) => "test";
+  const title = "test";
 
-    test('Defined input', () => {
-        const diagram = (document.body.innerHTML = '<div id="test"></div>')
-        const color = 'red'
+  test("Defined input", () => {
+    const diagram = (document.body.innerHTML = '<div id="test"></div>');
+    const color = "red";
 
-        spiderGraph(data, minValue, {
-            selector: '#test',
-            color: color,
-            margins: margins,
-            setTooltip: setTooltip,
-            size: size,
-            title: title
-        })
+    SpiderGraph(data, minValue, {
+      selector: "#test",
+      color: color,
+      margins: margins,
+      setTooltip: setTooltip,
+      size: size,
+      title: title,
+    });
 
-        expect(diagram).toBeTruthy()
-    })
+    expect(diagram).toBeTruthy();
+  });
 
-    test('Empty input', () => {
-        const diagram = (document.body.innerHTML = '<div id="test"></div>')
+  test("Empty input", () => {
+    const diagram = (document.body.innerHTML = '<div id="test"></div>');
 
-        spiderGraph(data, minValue, {
-            selector: '#test',
-            margins: {},
-            size: {}
-        })
+    SpiderGraph(data, minValue, {
+      selector: "#test",
+      margins: {},
+      size: {},
+    });
 
-        expect(diagram).toBeTruthy()
-    })
+    expect(diagram).toBeTruthy();
+  });
 
-    test('Undefined input', () => {
-        const diagram = (document.body.innerHTML = '<div id="test"></div>')
+  test("Undefined input", () => {
+    const diagram = (document.body.innerHTML = '<div id="test"></div>');
 
-        spiderGraph(data, minValue, {
-            selector: '#test'
-        })
+    SpiderGraph(data, minValue, {
+      selector: "#test",
+    });
 
-        expect(diagram).toBeTruthy()
-    })
+    expect(diagram).toBeTruthy();
+  });
 
-    test('Tooltip', () => {
-        const diagram = (document.body.innerHTML = '<div id="test"></div>')
+  test("Tooltip", () => {
+    const diagram = (document.body.innerHTML = '<div id="test"></div>');
 
-        spiderGraph(data, minValue, {
-            selector: '#test',
-            margins: margins,
-            setTooltip: setTooltip,
-            size: size,
-            title: title
-        })
+    SpiderGraph(data, minValue, {
+      selector: "#test",
+      margins: margins,
+      setTooltip: setTooltip,
+      size: size,
+      title: title,
+    });
 
-        expect(diagram).toBeTruthy()
+    expect(diagram).toBeTruthy();
 
-        const container = document.querySelector('#test')
-        const tooltip = container.querySelector('div')
+    const container = document.querySelector("#test");
+    const tooltip = container.querySelector("div");
 
-        // Data point tooltip.
-        const dataPoint = container.querySelector('.data-point')
-        fireEvent.mouseOver(dataPoint, {
-            pageX: 50,
-            pageY: 50
-        })
-        expect(getComputedStyle(tooltip).opacity).toBe('1')
+    // Data point tooltip.
+    const dataPoint = container.querySelector(".data-point");
+    const mouseOverEvent = new MouseEvent("mouseover", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      pageX: 50,
+      pageY: 50,
+    });
 
-        fireEvent.mouseOut(dataPoint, {
-            pageX: 50,
-            pageY: 50
-        })
-        expect(getComputedStyle(tooltip).opacity).toBe('0')
-    })
+    dataPoint.dispatchEvent(mouseOverEvent);
+    expect(getComputedStyle(tooltip).opacity).toBe("1");
 
-    test('Undefined tooltip', () => {
-        const diagram = (document.body.innerHTML = '<div id="test"></div>')
+    const mouseOutEvent = new MouseEvent("mouseout", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      pageX: 50,
+      pageY: 50,
+    });
 
-        spiderGraph(data, minValue, {
-            selector: '#test',
-            margins: margins,
-            size: size,
-            title: title
-        })
+    dataPoint.dispatchEvent(mouseOutEvent);
+    expect(getComputedStyle(tooltip).opacity).toBe("0");
+  });
 
-        expect(diagram).toBeTruthy()
+  test("Undefined tooltip", () => {
+    const diagram = (document.body.innerHTML = '<div id="test"></div>');
 
-        const container = document.querySelector('#test')
-        const tooltip = container.querySelector('div')
+    SpiderGraph(data, minValue, {
+      selector: "#test",
+      margins: margins,
+      size: size,
+      title: title,
+    });
 
-        // Data point tooltip.
-        const dataPoint = container.querySelector('.data-point')
-        fireEvent.mouseOver(dataPoint, {
-            pageX: 50,
-            pageY: 50
-        })
-        expect(getComputedStyle(tooltip).opacity).toBe('0')
+    expect(diagram).toBeTruthy();
 
-        fireEvent.mouseOut(dataPoint, {
-            pageX: 50,
-            pageY: 50
-        })
-        expect(getComputedStyle(tooltip).opacity).toBe('0')
-    })
-})
+    const container = document.querySelector("#test");
+    const tooltip = container.querySelector("div");
+
+    // Data point tooltip.
+    const dataPoint = container.querySelector(".data-point");
+    const mouseOverEvent = new MouseEvent("mouseover", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      pageX: 50,
+      pageY: 50,
+    });
+
+    dataPoint.dispatchEvent(mouseOverEvent);
+    expect(getComputedStyle(tooltip).opacity).toBe("0");
+
+    const mouseOutEvent = new MouseEvent("mouseout", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      pageX: 50,
+      pageY: 50,
+    });
+
+    dataPoint.dispatchEvent(mouseOutEvent);
+    expect(getComputedStyle(tooltip).opacity).toBe("0");
+  });
+});

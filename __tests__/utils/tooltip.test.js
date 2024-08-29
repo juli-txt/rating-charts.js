@@ -1,24 +1,24 @@
-import * as d3 from 'd3'
-import { getTooltip, hideTooltip, showTooltip } from '../../Charts/tooltip'
+import * as d3 from "d3";
+import { getTooltip, hideTooltip, showTooltip } from "../../src/utils";
 
-describe('tooltip', () => {
-    test('Tooltip', () => {
-        document.body.innerHTML = '<div id="test"></div>'
-        const container = document.querySelector('#test')
-        const tooltip = getTooltip(d3.select(container))
+describe("Tooltip", () => {
+  test("Tooltip", () => {
+    document.body.innerHTML = '<div id="test"></div>';
+    const container = document.querySelector("#test");
+    const tooltip = getTooltip(d3.select(container));
 
-        expect(tooltip).toBeTruthy()
+    expect(tooltip).toBeTruthy();
 
-        const event = { pageX: 100, pageY: 100 }
+    const event = { pageX: 100, pageY: 100 };
 
-        showTooltip(tooltip, event, '')
-        showTooltip(tooltip, event, 'test')
+    showTooltip(tooltip, event, "");
+    showTooltip(tooltip, event, "test");
 
-        const div = container.querySelector('div')
-        expect(getComputedStyle(div).opacity).toBe('1')
+    const div = container.querySelector("div");
+    expect(getComputedStyle(div).opacity).toBe("1");
 
-        hideTooltip(tooltip)
+    hideTooltip(tooltip);
 
-        expect(getComputedStyle(div).opacity).toBe('0')
-    })
-})
+    expect(getComputedStyle(div).opacity).toBe("0");
+  });
+});

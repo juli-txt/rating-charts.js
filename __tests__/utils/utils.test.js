@@ -4,9 +4,9 @@ import {
   getDeviationColorValue,
   getSign,
   getTextWidth,
-} from "../../src/charts/utils";
+} from "../../src/utils";
 
-describe("utils", () => {
+describe("Utils", () => {
   describe("formatNumber", () => {
     test("Positive decimals", () => {
       expect(formatNumber(123.4, 3)).toBe("123");
