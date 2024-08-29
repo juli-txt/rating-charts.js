@@ -9,23 +9,31 @@ import {
 } from "../../utils";
 
 /**
+ * @typedef {object} RatingDataProps
+ * @property {number} ratingValue - The rating value to be displayed.
+ * @property {number} ratingValueTrend - The rating value trend to be displayed.
+ * @property {number=} ratingDeviation - The rating deviation to be displayed.
+ * @property {number=} ratingDeviationTrend - The rating deviation trend to be displayed.
+ * @property {number=} maxRatingDeviation - The maximum rating deviation to calculate the color effect.
+ */
+
+/**
+ * @typedef {object} RatingOptions
+ * @property {string} selector - The selector to render the chart in a div.
+ * @property {string=} title - The general title of the chart.
+ * @property {object} tooltips - The tooltips of the chart to provide additional information.
+ * @property {(_deviation: number) => string=} tooltips.setDeviationTooltip - The function to set the tooltip for the deviation.
+ * @property {(_deviationTrend: number) => string=} tooltips.setDeviationTrendTooltip - The function to set the tooltip for the trend of the deviation.
+ * @property {(_value: number) => string=} tooltips.setValueTooltip - The function to set the tooltip for the value.
+ * @property {(_valueTrend: number) => string=} tooltips.setValueTrendTooltip - The function to set the tooltip for the trend of the value.
+ * @property {number=} width - The width of the chart.
+ */
+
+/**
  * Renders a rating value and rating deviation.
  *
- * @param {object} data - The rating to be visualized.
- * @param {number} data.ratingValue - The rating value to be displayed.
- * @param {number} data.ratingValueTrend - The rating value trend to be displayed.
- * @param {number=} data.ratingDeviation - The rating deviation to be displayed.
- * @param {number=} data.ratingDeviationTrend - The rating deviation trend to be displayed.
- * @param {number=} data.maxRatingDeviation - The maximum rating deviation to calculate the color effect.
- * @param {object} options - The options for the chart.
- * @param {string} options.selector - The selector to render the chart in a div.
- * @param {string=} options.title - The general title of the chart.
- * @param {object} options.tooltips - The tooltips of the chart to provide additional information.
- * @param {(_deviation: number) => string=} options.tooltips.setDeviationTooltip - The function to set the tooltip for the deviation.
- * @param {(_deviationTrend: number) => string=} options.tooltips.setDeviationTrendTooltip - The function to set the tooltip for the trend of the deviation.
- * @param {(_value: number) => string=} options.tooltips.setValueTooltip - The function to set the tooltip for the value.
- * @param {(_valueTrend: number) => string=} options.tooltips.setValueTrendTooltip - The function to set the tooltip for the trend of the value.
- * @param {number=} options.width - The width of the chart.
+ * @param {RatingDataProps} data - The rating to be visualized.
+ * @param {RatingOptions} options - The options for the chart.
  * @return {void} - The rating value and deviation are rendered in the DOM.
  */
 export function Rating(data, options) {

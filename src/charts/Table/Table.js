@@ -2,26 +2,38 @@ import * as d3 from "d3";
 import { getTooltip, hideTooltip, showTooltip } from "../../utils";
 
 /**
+ * @typedef {object} TableDataProps
+ * @property {number} value - The rating value to be displayed in the table.
+ * @property {number | null} deviation - The rating deviation to be displayed in the table.
+ * @property {Date}timestamp - The timestamp of the rating to be displayed in the table.
+ */
+
+/**
+ * @typedef {object} TableColumnProps
+ * @property {"timestamp" | "value" | "deviation"} key - The key of the column.
+ * @property {string} header - The header of the column.
+ */
+
+/**
+ * @typedef {object} TableOptions
+ * @property {string} selector - The selector to render the table in a div.
+ * @property {number=} marginTop - The top margin of the table.
+ * @property {(_header: string) => string=} setHeaderTooltip - The function to set the tooltip for the column headers.
+ * @property {(alpha: number) => string=}setRGBColor - The function to set the color of the table.
+ * @property {object} size - The size of the table.
+ * @property {number=} size.maxHeight - The maximum height of the table.
+ * @property {number=} size.maxWidth - The maximum width of the table.
+ * @property {number=} size.minHeight - The minimum height of the table.
+ * @property {number=} size.minWidth - The minimum width of the table.
+ * @property {string=} title - The general title for the table.
+ */
+
+/**
  * Renders a table.
  *
- * @param {object[]} data - The rating data to be displayed in the table. Contains the timestamp, value and deviation.
- * @param {number} data[].value - The rating value to be displayed in the table.
- * @param {number | null} data[].deviation - The rating deviation to be displayed in the table.
- * @param {Date} data[].timestamp - The timestamp of the rating to be displayed in the table.
- * @param {object[]} columns - The columns of the table.
- * @param {"timestamp" | "value" | "deviation"} columns.key - The key of the column.
- * @param {string} columns.header - The header of the column.
- * @param {object} options - The options for the table.
- * @param {string} options.selector - The selector to render the table in a div.
- * @param {number=} options.marginTop - The top margin of the table.
- * @param {(_header: string) => string=} options.setHeaderTooltip - The function to set the tooltip for the column headers.
- * @param {(alpha: number) => string=} options.setRGBColor - The function to set the color of the table.
- * @param {object} options.size - The size of the table.
- * @param {number=} options.size.maxHeight - The maximum height of the table.
- * @param {number=} options.size.maxWidth - The maximum width of the table.
- * @param {number=} options.size.minHeight - The minimum height of the table.
- * @param {number=} options.size.minWidth - The minimum width of the table.
- * @param {string=} options.title - The general title for the table.
+ * @param {Array<TableDataProps>} data - The rating data to be displayed in the table. Contains the timestamp, value and deviation.
+ * @param {Array<TableColumnProps>} columns - The columns of the table.
+ * @param {TableOptions} options - The options for the table.
  * @returns {void} - The table is rendered in the DOM.
  */
 export function Table(data, columns, options) {

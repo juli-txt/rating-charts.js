@@ -7,31 +7,35 @@ import {
 } from "../../utils";
 
 /**
+ * @typedef {object} HistogramOptions
+ * @property {string} selector - The selector to render the diagram in a div.
+ * @property {string=} color - The color of the diagram.
+ * @property {(_value: string, _percentage: string) => string=} setUserInfo - The function to set the information text for the specific user.
+ * @property {object} margins - The margins of the diagram.
+ * @property {number=} margins.marginBottom - The bottom margin of the diagram.
+ * @property {number=} margins.marginLeft - The left margin of the diagram.
+ * @property {number=} margins.marginRight - The right margin of the diagram.
+ * @property {number=} margins.marginTop - The top margin of the diagram.
+ * @property {object} size - The size of the diagram.
+ * @property {number=} size.height - The height of the diagram.
+ * @property {number=} size.width - The width of the diagram.
+ * @property {object} titles - The titles of the diagram.
+ * @property {string=} titles.title - The general of the diagram.
+ * @property {string=} titles.xAxisTitle - The x-axis title of the diagram.
+ * @property {string=} titles.yAxisTitle - The y-axis title of the diagram.
+ * @property {object} tooltips - The tooltips of the diagram to provide additional information.
+ * @property {(_value: string, _percentage: string) => string=} tooltips.setUserInfoTooltip - The function to set the tooltip for the user info.
+ * @property {(_minValue: number, _maxValue: number) => string=} tooltips.setXAxisTooltip - The function to set the tooltip for the x-axis.
+ * @property {(_minValue: number, _maxValue: number) => string=} tooltips.setYAxisTooltip - The function to set the tooltip for the y-axis.
+ */
+
+/**
  * Renders a histogram.
  *
  * @param {number[]} data - The rating data to be displayed in the diagram. Contains an array of rating values.
  * @param {number} minRatingValue - The minimum value of the rating for the x-axis.
  * @param {number} ratingValue - The specific rating value.
- * @param {object} options - The options for the diagram.
- * @param {string} options.selector - The selector to render the diagram in a div.
- * @param {string=} options.color - The color of the diagram.
- * @param {(_value: string, _percentage: string) => string=} options.setUserInfo - The function to set the information text for the specific user.
- * @param {object} options.margins - The margins of the diagram.
- * @param {number=} options.margins.marginBottom - The bottom margin of the diagram.
- * @param {number=} options.margins.marginLeft - The left margin of the diagram.
- * @param {number=} options.margins.marginRight - The right margin of the diagram.
- * @param {number=} options.margins.marginTop - The top margin of the diagram.
- * @param {object} options.size - The size of the diagram.
- * @param {number=} options.size.height - The height of the diagram.
- * @param {number=} options.size.width - The width of the diagram.
- * @param {object} options.titles - The titles of the diagram.
- * @param {string=} options.titles.title - The general of the diagram.
- * @param {string=} options.titles.xAxisTitle - The x-axis title of the diagram.
- * @param {string=} options.titles.yAxisTitle - The y-axis title of the diagram.
- * @param {object} options.tooltips - The tooltips of the diagram to provide additional information.
- * @param {(_value: string, _percentage: string) => string=} options.tooltips.setUserInfoTooltip - The function to set the tooltip for the user info.
- * @param {(_minValue: number, _maxValue: number) => string=} options.tooltips.setXAxisTooltip - The function to set the tooltip for the x-axis.
- * @param {(_minValue: number, _maxValue: number) => string=} options.tooltips.setYAxisTooltip - The function to set the tooltip for the y-axis.
+ * @param {HistogramOptions} options - The options for the diagram.
  * @returns {void} - The histogram is rendered in the DOM.
  */
 export function Histogram(data, minRatingValue, ratingValue, options) {

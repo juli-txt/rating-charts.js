@@ -7,25 +7,33 @@ import {
 } from "../../utils";
 
 /**
+ * @typedef {object} SpiderGraphDataProps
+ * @property {string} key - The key to the rating data.
+ * @property {number} value - The value of the rating data.
+ */
+
+/**
+ * @typedef {object} SpiderGraphOptions
+ * @property {string} selector - The selector to render the graph in a div.
+ * @property {string=} color - The color of the graph.
+ * @property {object} margins - The margins of the graph.
+ * @property {number=} margins.marginBottom - The bottom margin of the graph.
+ * @property {number=} margins.marginLeft - The left margin of the graph.
+ * @property {number=} margins.marginRight - The right margin of the graph.
+ * @property {number=} margins.marginTop - The top margin of the graph.
+ * @property {(_concept: string, _value: number) => string=} setTooltip - The function to set the tooltip for the values.
+ * @property {object} size - The size of the graph.
+ * @property {number=} size.height - The height of the graph.
+ * @property {number=} size.width - The width of the graph.
+ * @property {string=} title - The general title of the graph.
+ */
+
+/**
  * Renders a spider graph.
  *
- * @param {object[]} data - The rating data to be displayed in the graph. Contains the values for multiple concepts.
- * @property {string} data[].key - The key to the rating data.
- * @property {number} data[].value - The value of the rating data.
+ * @param {Array<SpiderGraphDataProps>} data - The rating data to be displayed in the graph. Contains the values for multiple concepts.
  * @param {number} minValue - The minimum value of the rating scale.
- * @param {object} options - The options for the graph.
- * @param {string} options.selector - The selector to render the graph in a div.
- * @param {string=} options.color - The color of the graph.
- * @param {object} options.margins - The margins of the graph.
- * @param {number=} options.margins.marginBottom - The bottom margin of the graph.
- * @param {number=} options.margins.marginLeft - The left margin of the graph.
- * @param {number=} options.margins.marginRight - The right margin of the graph.
- * @param {number=} options.margins.marginTop - The top margin of the graph.
- * @param {(_concept: string, _value: number) => string=} options.setTooltip - The function to set the tooltip for the values.
- * @param {object} options.size - The size of the graph.
- * @param {number=} options.size.height - The height of the graph.
- * @param {number=} options.size.width - The width of the graph.
- * @param {string=} options.title - The general title of the graph.
+ * @param {SpiderGraphOptions} options - The options for the graph.
  * @returns {void} - The spider graph is rendered in the DOM.
  */
 export function SpiderGraph(data, minValue, options) {

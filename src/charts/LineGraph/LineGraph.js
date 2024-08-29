@@ -2,35 +2,43 @@ import * as d3 from "d3";
 import { getTooltip, hideTooltip, showTooltip } from "../../utils";
 
 /**
+ * @typedef {object} LineGraphDataProps
+ * @property {number} value - The rating value to be displayed in the graph.
+ * @property {number=} deviation - The rating deviation to be displayed in the graph.
+ * @property {Date} timestamp - The timestamp of the rating to be displayed in the graph.
+ */
+
+/**
+ * @typedef {object} LineGraphOptions
+ * @property {string} selector - The selector to render the graph in a div.
+ * @property {string=} color - The color of the graph.
+ * @property {object} margins - The margins of the graph.
+ * @property {number=} margins.marginBottom - The bottom margin of the graph.
+ * @property {number=} margins.marginLeft - The left margin of the graph.
+ * @property {number=} margins.marginRight - The right margin of the graph.
+ * @property {number=} margins.marginTop - The top margin of the graph.
+ * @property {object} size - The size of the graph.
+ * @property {number=} size.height - The height of the graph.
+ * @property {number=} size.width - The width of the graph.
+ * @property {object} titles - The titles of the graph.
+ * @property {string=} titles.title - The general title of the graph.
+ * @property {string=} titles.xAxisTitle - The x-axis title of the graph.
+ * @property {string=} titles.yAxisTitle - The y-axis title of the graph.
+ * @property {object} tooltips - The tooltips of the graph to provide additional information.
+ * @property {() => string=} tooltips.setAreaTooltip - The function to set the tooltip for the area.
+ * @property {(_value: number, _deviation: number, _timestamp: string) => string=} tooltips.setDataTooltip - The function to set the tooltip for the data.
+ * @property {(_value: number, _timestamp: string) => string=} tooltips.setLowerDeviationTooltip - The function to set the tooltip for the lower deviation line.
+ * @property {(_value: number, _timestamp: string) => string=} tooltips.setUpperDeviationTooltip - The function to set the tooltip for the upper deviation line.
+ * @property {(_minValue: string, _maxValue: string) => string=} tooltips.setXAxisTooltip - The function to set the tooltip for the x-axis.
+ * @property {(_minValue: number, _maxValue: number) => string=} tooltips.setYAxisTooltip - The function to set the tooltip for the y-axis.
+ */
+
+/**
  * Renders a line graph.
  *
- * @param {object[]} data - The rating data to be displayed in the graph. Contains the timestamp, value and deviation.
- * @param {number} data[].value - The rating value to be displayed in the graph.
- * @param {number=} data[].deviation - The rating deviation to be displayed in the graph.
- * @param {Date} data[].timestamp - The timestamp of the rating to be displayed in the graph.
+ * @param {Array<LineGraphDataProps>} data - The rating data to be displayed in the graph. Contains the timestamp, value and deviation.
  * @param {number} minRatingValue - The minimum value of the rating for the y-axis.
- * @param {object} options - The options for the graph.
- * @param {string} options.selector - The selector to render the graph in a div.
- * @param {string=} options.color - The color of the graph.
- * @param {object} options.margins - The margins of the graph.
- * @param {number=} options.margins.marginBottom - The bottom margin of the graph.
- * @param {number=} options.margins.marginLeft - The left margin of the graph.
- * @param {number=} options.margins.marginRight - The right margin of the graph.
- * @param {number=} options.margins.marginTop - The top margin of the graph.
- * @param {object} options.size - The size of the graph.
- * @param {number=} options.size.height - The height of the graph.
- * @param {number=} options.size.width - The width of the graph.
- * @param {object} options.titles - The titles of the graph.
- * @param {string=} options.titles.title - The general title of the graph.
- * @param {string=} options.titles.xAxisTitle - The x-axis title of the graph.
- * @param {string=} options.titles.yAxisTitle - The y-axis title of the graph.
- * @param {object} options.tooltips - The tooltips of the graph to provide additional information.
- * @param {() => string=} options.tooltips.setAreaTooltip - The function to set the tooltip for the area.
- * @param {(_value: number, _deviation: number, _timestamp: string) => string=} options.tooltips.setDataTooltip - The function to set the tooltip for the data.
- * @param {(_value: number, _timestamp: string) => string=} options.tooltips.setLowerDeviationTooltip - The function to set the tooltip for the lower deviation line.
- * @param {(_value: number, _timestamp: string) => string=} options.tooltips.setUpperDeviationTooltip - The function to set the tooltip for the upper deviation line.
- * @param {(_minValue: string, _maxValue: string) => string=} options.tooltips.setXAxisTooltip - The function to set the tooltip for the x-axis.
- * @param {(_minValue: number, _maxValue: number) => string=} options.tooltips.setYAxisTooltip - The function to set the tooltip for the y-axis.
+ * @param {LineGraphOptions} options - The options for the graph.
  * @returns {void} - The line graph is rendered in the DOM.
  */
 export function LineGraph(data, minRatingValue, options) {
