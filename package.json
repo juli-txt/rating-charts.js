@@ -1,7 +1,7 @@
 {
   "name": "rating-charts.js",
-  "version": "1.0.6",
-  "main": "index.js",
+  "version": "1.0.7",
+  "main": ".dist/charts/index.js",
   "type": "module",
   "scripts": {
     "test": "jest"
