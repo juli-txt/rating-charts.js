@@ -1,6 +1,6 @@
 {
   "name": "rating-charts.js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/juli-txt/RatingCharts.js#readme",
   "description": "",
-  "exports": "./index.js",
+  "exports": "./dist/charts/index.js",
   "devDependencies": {
     "@types/d3": "^7.4.3",
     "typescript": "^5.5.4"
