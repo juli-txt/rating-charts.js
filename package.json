@@ -1,9 +1,13 @@
 {
   "name": "rating-charts.js",
-  "version": "1.0.7",
-  "main": ".dist/charts/index.js",
+  "version": "1.0.8",
+  "main": "./dist/charts/index.js",
+  "types": "./dist/charts/index.d.ts",
+  "module": "./dist/esm/charts/index.js",
   "type": "module",
   "scripts": {
+    "clean": "tsc --build --clean",
+    "build": "tsc --build && tsc --build tsconfig.esm.json",
     "test": "jest"
   },
   "repository": {
@@ -17,9 +21,15 @@
   },
   "homepage": "https://github.com/juli-txt/RatingCharts.js#readme",
   "description": "",
-  "exports": "./dist/charts/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/charts/index.js",
+      "require": "./dist/esm/charts/index.js"
+    }
+  },
   "devDependencies": {
     "@types/d3": "^7.4.3",
+    "jest": "^29.0.0",
     "typescript": "^5.5.4"
   },
   "dependencies": {
