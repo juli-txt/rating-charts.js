@@ -1,8 +1,8 @@
 {
   "name": "rating-charts.js",
-  "version": "1.0.9",
-  "main": "./dist/charts/index.js",
-  "types": "./dist/charts/index.d.ts",
+  "version": "1.0.10",
+  "main": "./dist/cjs/charts/index.js",
+  "types": "./dist/cjs/charts/index.d.ts",
   "module": "./dist/esm/charts/index.js",
   "type": "module",
   "scripts": {
@@ -24,7 +24,8 @@
   "exports": {
     ".": {
       "import": "./dist/esm/charts/index.js",
-      "require": "./dist/charts/index.js"
+      "require": "./dist/cjs/charts/index.js",
+      "types": "./dist/cjs/charts/index.d.ts"
     }
   },
   "devDependencies": {
