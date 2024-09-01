@@ -12,17 +12,17 @@ Currently the package contains the following visualizations:
 - Table
 - Display of rating value, deviation and trend of both
 
-You can find the project on [GitHub](https://github.com/juli-txt/RatingCharts.js),
+You can find the project on [GitHub](https://classic.yarnpkg.com/en/package/react-rating-charts),
 [npm](https://www.npmjs.com/package/rating-charts.js?activeTab=readme) or [yarn](https://yarnpkg.com/package?q=RatingCharts.&name=rating-charts.js)
 
-There is also an implementation for usage in React: link
+There is also an implementation for usage in React: [react-rating-charts](https://www.npmjs.com/package/react-rating-charts?activeTab=readme)
 
 ## Usage
 
-All charts can be imported like
+All charts can be imported like this:
 
-```
-import { Table } from 'rating-charts.js'
+```js
+import { Table } from "rating-charts.js";
 ```
 
 This `Table` can now be used as an SVG element.
