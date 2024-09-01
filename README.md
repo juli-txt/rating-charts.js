@@ -13,7 +13,7 @@ Currently the package contains the following visualizations:
 - Display of rating value, deviation and trend of both
 
 You can find the project on [GitHub](https://github.com/juli-txt/RatingCharts.js),
-[npm](https://www.npmjs.com/package/rating-charts.js) or [yarn](https://yarnpkg.com/package?q=RatingCharts.&name=rating-charts.js)
+[npm](https://www.npmjs.com/package/rating-charts.js?activeTab=readme) or [yarn](https://yarnpkg.com/package?q=RatingCharts.&name=rating-charts.js)
 
 There is also an implementation for usage in React: link
 
