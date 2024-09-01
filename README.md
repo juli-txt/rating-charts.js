@@ -1,4 +1,4 @@
-# RatingCharts.js
+# rating-charts.js
 
 This is a strongly typed JavaScript package for visualizing rating systems like Elo.
 It can be used in educational or gamified dashboards as well as in pure gaming applications.
