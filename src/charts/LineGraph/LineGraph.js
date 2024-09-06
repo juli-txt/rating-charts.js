@@ -103,25 +103,24 @@ export function LineGraph(data, minRatingValue, options) {
   const startDate = data[0].timestamp;
   const endDate = data[data.length - 1].timestamp;
 
-  // Format the x-scale.
-  const xScale = [
-    startDate.toISOString().substring(0, 10),
-    endDate.toISOString().substring(0, 10),
-  ].map((d) => d3.timeParse("%Y-%m-%d")(d));
-
   // Create the horizontal scale.
   const x = d3
     .scaleTime()
-    // @ts-ignore
-    .domain(xScale)
+    .domain([startDate, endDate])
     .range([marginLeft, width - marginRight]);
+
+  // Calculate the number of ticks on the x-axis.
+  const timeDifference =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  const xTicks = timeDifference > 8 ? 8 : timeDifference;
 
   // Add the x-axis.
   svg
     .append("g")
     .attr("class", "x-axis")
     .attr("transform", `translate(0, ${height - marginBottom})`)
-    .call(d3.axisBottom(x).tickFormat((d) => d3.timeFormat("%Y-%m-%d")(d)))
+    // @ts-ignore
+    .call(d3.axisBottom(x).ticks(xTicks).tickFormat(d3.timeFormat("%Y-%m-%d")))
     .attr("font-family", "Georgia")
     .on("mouseover", (event, _) =>
       showTooltip(

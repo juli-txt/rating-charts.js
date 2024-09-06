@@ -91,16 +91,18 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
     .text(xAxisTitle)
     .attr("font-family", "Georgia");
 
+  // Calculate the maximum value of the data.
+  const maxRatingValue = d3.max(data);
+
   // Create the horizontal scale.
   const x = d3
     .scaleLinear()
     // @ts-ignore
-    .domain([minRatingValue, d3.max(data)])
+    .domain([minRatingValue, maxRatingValue])
     .range([marginLeft, width - marginRight]);
 
   // Set the number of bins.
   const binCount = 80;
-  const maxValue = d3.max(data);
 
   // Add the x-axis.
   svg
@@ -110,8 +112,12 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
     .call(d3.axisBottom(x).ticks(binCount / 4))
     .attr("font-family", "Georgia")
     .on("mouseover", (event, _) =>
-      // @ts-ignore
-      showTooltip(tooltip, event, setXAxisTooltip(minRatingValue, maxValue))
+      showTooltip(
+        tooltip,
+        event,
+        // @ts-ignore
+        setXAxisTooltip(minRatingValue, maxRatingValue)
+      )
     )
     .on("mouseout", () => hideTooltip(tooltip));
 
@@ -120,7 +126,7 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
    */
   // Calculate the bin size.
   // @ts-ignore
-  const binSize = (maxValue - minRatingValue) / binCount;
+  const binSize = (maxRatingValue - minRatingValue) / binCount;
 
   // Create the histogram function.
   const histogram = d3
@@ -129,7 +135,7 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
     // @ts-ignore
     .domain(x.domain())
     // @ts-ignore
-    .thresholds(d3.range(minRatingValue, maxValue, binSize));
+    .thresholds(d3.range(minRatingValue, maxRatingValue, binSize));
 
   // Create the bins from the data.
   const bins = histogram(data);
@@ -137,12 +143,18 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
   /**
    * y-axis.
    */
+  // Calculate the maximum number of ratings in a bin.
+  // @ts-ignore
+  const maxHeight = d3.max(bins, (d) => d.length);
+
+  // Calculate the number of y-axis ticks.
+  const yTicks = maxHeight < 10 ? maxHeight : 10;
+
   // Create the vertical scale.
   const y = d3
     .scaleLinear()
     .range([height - marginBottom, marginTop])
-    // @ts-ignore
-    .domain([0, d3.max(bins, (d) => d.length)]);
+    .domain([0, maxHeight]);
 
   // Label for the y-axis.
   svg
@@ -158,7 +170,7 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
     .append("g")
     .attr("class", "y-axis")
     .attr("transform", `translate(${marginLeft}, 0)`)
-    .call(d3.axisLeft(y).ticks(10).tickFormat(d3.format("d")))
+    .call(d3.axisLeft(y).ticks(yTicks).tickFormat(d3.format("d")))
     .attr("font-family", "Georgia")
     .on("mouseover", (event, _) =>
       showTooltip(

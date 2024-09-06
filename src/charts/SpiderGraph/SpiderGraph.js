@@ -7,9 +7,7 @@ import {
 } from "../../utils";
 
 /**
- * @typedef {object} SpiderGraphDataProps
- * @property {string} key - The key to the rating data.
- * @property {number} value - The value of the rating data.
+ * @typedef {Object.<string, number>} SpiderGraphDataProps - The key-value-pair of the rating data.
  */
 
 /**
@@ -31,12 +29,12 @@ import {
 /**
  * Renders a spider graph.
  *
- * @param {Array<SpiderGraphDataProps>} data - The rating data to be displayed in the graph. Contains the values for multiple concepts.
- * @param {number} minValue - The minimum value of the rating scale.
+ * @param {SpiderGraphDataProps} data - The rating data to be displayed in the graph. Contains the values for multiple concepts.
+ * @param {number} minRatingValue - The minimum value of the rating scale.
  * @param {SpiderGraphOptions} options - The options for the graph.
  * @returns {void} - The spider graph is rendered in the DOM.
  */
-export function SpiderGraph(data, minValue, options) {
+export function SpiderGraph(data, minRatingValue, options) {
   /**
    * Parameters.
    */
@@ -80,7 +78,6 @@ export function SpiderGraph(data, minValue, options) {
   const concepts = Object.keys(data);
 
   // Get the maximum rating value.
-  // @ts-ignore
   const maxRatingValue = d3.max(concepts, (concept) => data[concept]);
 
   // Calculate the innerWidth and innerHeight with the margins.
@@ -90,13 +87,15 @@ export function SpiderGraph(data, minValue, options) {
   // Scale the chart.
   const scale = d3
     .scaleLinear()
-    .domain([minValue, maxRatingValue])
+    // @ts-ignore
+    .domain([minRatingValue, maxRatingValue])
     .range([0, Math.min(innerWidth, innerHeight) / 3]);
 
   // Thresholds for the ticks.
   const ticks = d3
     .range(0, 6)
-    .map((i) => minValue + (i / 5) * (maxRatingValue - minValue));
+    // @ts-ignore
+    .map((i) => minRatingValue + (i / 5) * (maxRatingValue - minRatingValue));
 
   // Draw the circles.
   svg
@@ -145,7 +144,9 @@ export function SpiderGraph(data, minValue, options) {
     return {
       name: f,
       angle: angle,
+      // @ts-ignore
       line_coord: angleToCoordinate(angle, maxRatingValue * 1.1),
+      // @ts-ignore
       label_coord: angleToCoordinate(angle, maxRatingValue * 1.3),
     };
   });
