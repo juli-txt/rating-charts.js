@@ -1,10 +1,14 @@
 {
   "name": "rating-charts.js",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "main": "./dist/cjs/charts/index.js",
   "types": "./dist/cjs/charts/index.d.ts",
   "module": "./dist/esm/charts/index.js",
   "type": "module",
+  "files": [
+    "dist/",
+    "assets/"
+  ],
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc --build && tsc --build tsconfig.esm.json",
