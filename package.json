@@ -1,6 +1,6 @@
 {
   "name": "rating-charts.js",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "main": "./dist/cjs/charts/index.js",
   "types": "./dist/cjs/charts/index.d.ts",
   "module": "./dist/esm/charts/index.js",
