@@ -1,6 +1,6 @@
 {
   "name": "rating-charts.js",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "main": "./dist/cjs/charts/index.js",
   "types": "./dist/cjs/charts/index.d.ts",
   "module": "./dist/esm/charts/index.js",
@@ -30,7 +30,11 @@
       "import": "./dist/esm/charts/index.js",
       "require": "./dist/cjs/charts/index.js",
       "types": "./dist/cjs/charts/index.d.ts"
-    }
+    },
+    "./assets/arrow-up-up.svg": "./assets/arrow-up-up.svg",
+    "./assets/arrow-down-down.svg": "./assets/arrow-down-down.svg",
+    "./assets/arrow-up-down.svg": "./assets/arrow-up-down.svg",
+    "./assets/arrow-down-up.svg": "./assets/arrow-down-up.svg"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",
