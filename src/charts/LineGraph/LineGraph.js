@@ -74,6 +74,19 @@ export function LineGraph(data, minRatingValue, options) {
   const container = d3.select(selector);
   container.selectAll("*").remove();
 
+  /**
+   * Title.
+   */
+  // Render the title of the graph.
+  container
+    .append("div")
+    .style("text-align", "center") // Center the title
+    .style("margin-bottom", "10px") // Add space between the title and the graph
+    .append("h3")
+    .text(title)
+    .style("text-decoration", "underline")
+    .style("font-family", "Georgia");
+
   // Create the SVG element.
   const svg = container
     .append("svg")
@@ -114,13 +127,26 @@ export function LineGraph(data, minRatingValue, options) {
     (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
   const xTicks = timeDifference > 8 ? 8 : timeDifference;
 
+  // Calculate the tick interval
+  const tickValues = d3.timeDay.range(
+    startDate,
+    endDate,
+    Math.ceil(timeDifference / xTicks)
+  );
+
   // Add the x-axis.
   svg
     .append("g")
     .attr("class", "x-axis")
     .attr("transform", `translate(0, ${height - marginBottom})`)
     // @ts-ignore
-    .call(d3.axisBottom(x).ticks(xTicks).tickFormat(d3.timeFormat("%Y-%m-%d")))
+    .call(
+      d3
+        .axisBottom(x)
+        .tickValues(tickValues)
+        // @ts-ignore
+        .tickFormat(d3.timeFormat("%Y-%m-%d"))
+    )
     .attr("font-family", "Georgia")
     .on("mouseover", (event, _) =>
       showTooltip(
@@ -363,17 +389,4 @@ export function LineGraph(data, minRatingValue, options) {
       )
     )
     .on("mouseout", () => hideTooltip(tooltip));
-
-  /**
-   * Title.
-   */
-  // Render the title of the graph.
-  svg
-    .append("text")
-    .attr("x", width / 2)
-    .attr("y", marginTop / 3.25)
-    .attr("text-anchor", "middle")
-    .style("text-decoration", "underline")
-    .text(title)
-    .attr("font-family", "Georgia");
 }

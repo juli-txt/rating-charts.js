@@ -66,10 +66,12 @@ export function Table(data, columns, options) {
    */
   // Render the title of the diagram.
   container
-    .append("text")
-    .attr("text-anchor", "middle")
-    .style("text-decoration", "underline")
+    .append("div")
+    .style("text-align", "center")
+    .style("margin-bottom", "10px")
+    .append("h3")
     .text(title)
+    .style("text-decoration", "underline")
     .style("font-family", "Georgia");
 
   /**

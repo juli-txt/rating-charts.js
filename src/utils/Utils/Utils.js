@@ -6,7 +6,7 @@
  * @returns {string} - Number as string with a maximum of x characters excluding the sign and decimal point.
  */
 export function formatNumber(value, length) {
-  if (typeof value === "undefined" || value === null) {
+  if (typeof value === "undefined" || value == null) {
     return "";
   }
 

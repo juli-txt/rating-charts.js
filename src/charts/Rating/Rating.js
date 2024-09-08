@@ -7,6 +7,14 @@ import {
   getDeviationColorValue,
   getTextWidth,
 } from "../../utils";
+// @ts-ignore
+import arrowUpUp from "rating-charts.js/assets/arrow-up-up.svg";
+// @ts-ignore
+import arrowDownDown from "rating-charts.js/assets/arrow-down-down.svg";
+// @ts-ignore
+import arroUpDown from "rating-charts.js/assets/arrow-up-down.svg";
+// @ts-ignore
+import arrowDownUp from "rating-charts.js/assets/arrow-down-up.svg";
 
 /**
  * @typedef {object} RatingDataProps
@@ -57,11 +65,11 @@ export function Rating(data, options) {
       setValueTooltip = (_value) => "",
       setValueTrendTooltip = (_valueTrend) => "",
     } = {},
-    width = 400,
+    width = 500,
   } = options;
 
   // Set the height to half of the width.
-  const height = width * 0.5;
+  const height = width * 0.4;
 
   /**
    * SVG container.
@@ -69,6 +77,18 @@ export function Rating(data, options) {
   // Remove the existing SVG container.
   const container = d3.select(selector);
   container.selectAll("*").remove();
+
+  /**
+   * Title.
+   */
+  container
+    .append("div")
+    .style("text-align", "center")
+    .style("margin-bottom", "-50px")
+    .append("h3")
+    .text(title)
+    .style("text-decoration", "underline")
+    .style("font-family", "Georgia");
 
   // Create a new SVG container.
   const svg = container
@@ -95,18 +115,21 @@ export function Rating(data, options) {
   );
 
   // Calculate the width of the deviation text.
-  const deviationTextWidth = ratingDeviation
-    ? getTextWidth(
-        // @ts-ignore
-        svg,
-        `±${formatNumber(ratingDeviation, 3)}`,
-        adjustedFontSize * 0.75
-      )
-    : 0;
+  const deviationTextWidth =
+    ratingDeviation !== undefined
+      ? getTextWidth(
+          // @ts-ignore
+          svg,
+          `±${formatNumber(ratingDeviation, 3)}`,
+          adjustedFontSize * 0.75
+        )
+      : 0;
 
   // Calculate the width of the value trend icon.
-  const valueTrendWidth = height * 0.19;
-  const deviationTrendWidth = height * 0.125;
+  const valueTrendWidth = height * 0.295;
+
+  // Calculate the width of the deviation trend icon.
+  const deviationTrendWidth = height * 0.225;
 
   // Calculate total width of all elements.
   const totalWidth =
@@ -140,12 +163,7 @@ export function Rating(data, options) {
   svg
     .append("image")
     .attr("class", "value-trend")
-    .attr(
-      "href",
-      ratingValueTrend > 0
-        ? "src/assets/up-arrow-svgrepo-com.svg"
-        : "src/assets/up-arrow-svgrepo-com.svg"
-    )
+    .attr("href", ratingValueTrend > 0 ? arrowUpUp : arrowDownDown)
     .attr("width", valueTrendWidth)
     .attr("height", valueTrendWidth)
     .attr("x", (width - totalWidth) / 2 + valueTextWidth)
@@ -203,19 +221,11 @@ export function Rating(data, options) {
       )
       .on("mouseout", () => hideTooltip(tooltip));
 
-    // Calculate the x position and width of the deviation trend.
-    const deviationTrendWidth = height * 0.125;
-
     // Add the deviation trend icon.
     svg
       .append("image")
       .attr("class", "deviation-trend")
-      .attr(
-        "href",
-        ratingDeviationTrend > 0
-          ? "src/assets/up-arrow-svgrepo-com.svg"
-          : "src/assets/up-arrow-svgrepo-com.svg"
-      )
+      .attr("href", ratingDeviationTrend > 0 ? arroUpDown : arrowDownUp)
       .attr("width", deviationTrendWidth)
       .attr("height", deviationTrendWidth)
       .attr(
@@ -235,17 +245,4 @@ export function Rating(data, options) {
       })
       .on("mouseout", () => hideTooltip(tooltip));
   }
-
-  /**
-   * Title.
-   */
-  // Render the title of the value.
-  svg
-    .append("text")
-    .attr("x", width / 2)
-    .attr("y", height * 0.1)
-    .attr("text-anchor", "middle")
-    .style("text-decoration", "underline")
-    .text(title)
-    .attr("font-family", "Georgia");
 }

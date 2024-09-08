@@ -60,6 +60,19 @@ export function SpiderGraph(data, minRatingValue, options) {
   const container = d3.select(selector);
   container.selectAll("*").remove();
 
+  /**
+   * Title.
+   */
+  // Render the title of the diagram.
+  container
+    .append("div")
+    .style("text-align", "center")
+    .style("margin-bottom", "-30px")
+    .append("h3")
+    .text(title)
+    .style("text-decoration", "underline")
+    .style("font-family", "Georgia");
+
   // Create the SVG element.
   const svg = container
     .append("svg")
@@ -248,17 +261,4 @@ export function SpiderGraph(data, minRatingValue, options) {
       showTooltip(tooltip, event, setTooltip(d.concept, d.value))
     )
     .on("mouseout", () => hideTooltip(tooltip));
-
-  /**
-   * Title.
-   */
-  // Render the title of the diagram.
-  svg
-    .append("text")
-    .attr("x", width / 2)
-    .attr("y", marginTop)
-    .attr("text-anchor", "middle")
-    .style("text-decoration", "underline")
-    .text(title)
-    .attr("font-family", "Georgia");
 }

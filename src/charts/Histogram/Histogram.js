@@ -69,6 +69,19 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
   const container = d3.select(selector);
   container.selectAll("*").remove();
 
+  /**
+   * Title.
+   */
+  // Render the title of the diagram.
+  container
+    .append("div")
+    .style("text-align", "center") // Center the title
+    .style("margin-bottom", "10px") // Add space between the title and the chart
+    .append("h3")
+    .text(title)
+    .style("text-decoration", "underline")
+    .style("font-family", "Georgia");
+
   // Create the SVG element.
   const svg = container
     .append("svg")
@@ -262,17 +275,4 @@ export function Histogram(data, minRatingValue, ratingValue, options) {
     .attr("stroke", color)
     .attr("stroke-width", 2)
     .attr("stroke-dasharray", "10");
-
-  /**
-   * Title.
-   */
-  // Render the title of the diagram.
-  svg
-    .append("text")
-    .attr("x", width / 2)
-    .attr("y", marginTop / 3.25)
-    .attr("text-anchor", "middle")
-    .style("text-decoration", "underline")
-    .text(title)
-    .attr("font-family", "Georgia");
 }
