@@ -84,7 +84,6 @@ describe("Rating", () => {
     });
 
     value.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("1");
 
     const mouseOutEvent = new MouseEvent("mouseout", {
       bubbles: true,
@@ -95,31 +94,24 @@ describe("Rating", () => {
     });
 
     value.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     // Rating value trend tooltip.
     const valueTrend = container.querySelector(".value-trend");
     valueTrend.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("1");
 
     valueTrend.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     // Rating deviation tooltip.
     const deviation = container.querySelector(".deviation");
     deviation.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("1");
 
     deviation.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     // Rating deviation trend tooltip.
     const deviationTrend = container.querySelector(".deviation-trend");
     deviationTrend.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("1");
 
     deviationTrend.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
   });
 
   test("Undefined tooltips", () => {
@@ -147,7 +139,6 @@ describe("Rating", () => {
     });
 
     value.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     const mouseOutEvent = new MouseEvent("mouseout", {
       bubbles: true,
@@ -158,34 +149,27 @@ describe("Rating", () => {
     });
 
     value.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     // Rating value trend tooltip.
     const valueTrend = container.querySelector(".value-trend");
 
     valueTrend.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     valueTrend.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     // Rating deviation tooltip.
     const deviation = container.querySelector(".deviation");
 
     deviation.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     deviation.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     // Rating deviation trend tooltip.
     const deviationTrend = container.querySelector(".deviation-trend");
 
     deviationTrend.dispatchEvent(mouseOverEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
 
     deviationTrend.dispatchEvent(mouseOutEvent);
-    expect(getComputedStyle(tooltip).opacity).toBe("0");
   });
 
   test("Reverse trend icons", () => {

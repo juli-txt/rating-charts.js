@@ -8,6 +8,12 @@ import {
 
 describe("Utils", () => {
   describe("formatNumber", () => {
+    test("Empty input", () => {
+      expect(formatNumber()).toBe("");
+      expect(formatNumber(undefined, 1)).toBe("");
+      expect(formatNumber(null, 1)).toBe("");
+    });
+
     test("Positive decimals", () => {
       expect(formatNumber(123.4, 3)).toBe("123");
       expect(formatNumber(123.4, 4)).toBe("123.4");
