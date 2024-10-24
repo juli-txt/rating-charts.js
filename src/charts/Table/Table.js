@@ -85,7 +85,9 @@ export function Table(data, columns, options) {
     .style("overflow-y", "auto")
     .style("max-width", `${maxWidth}px`)
     .style("overflow-x", "auto")
-    .style("margin-top", `${marginTop}px`);
+    .style("margin-top", `${marginTop}px`)
+    .style("display", "flex")
+    .style("justify-content", "center");
 
   // Create a table element.
   const table = scrollableDiv
@@ -94,7 +96,8 @@ export function Table(data, columns, options) {
     .style("font-size", "18px")
     .style("font-family", "Georgia")
     .style("min-width", `${minWidth}px`)
-    .style("min-height", `${minHeight}px`);
+    .style("min-height", `${minHeight}px`)
+    .style("margin", "auto");
 
   /**
    * Data visualization.
