@@ -43,7 +43,7 @@ describe("SpiderGraph", () => {
   test("Empty input", () => {
     const diagram = (document.body.innerHTML = '<div id="test"></div>');
 
-    SpiderGraph(data, minValue, {
+    SpiderGraph({}, minValue, {
       selector: "#test",
       margins: {},
       size: {},
@@ -55,7 +55,7 @@ describe("SpiderGraph", () => {
   test("Undefined input", () => {
     const diagram = (document.body.innerHTML = '<div id="test"></div>');
 
-    SpiderGraph(data, minValue, {
+    SpiderGraph(undefined, minValue, {
       selector: "#test",
     });
 

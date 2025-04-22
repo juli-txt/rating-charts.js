@@ -88,10 +88,12 @@ export function SpiderGraph(data, minRatingValue, options) {
    * Axis.
    */
   // Get the concepts of the data.
-  const concepts = Object.keys(data);
+  const concepts = Object.keys(data ?? {});
 
   // Get the maximum rating value.
-  const maxRatingValue = d3.max(concepts, (concept) => data[concept]);
+  const rawMaxValue = d3.max(concepts, (concept) => data[concept])
+  const maxRatingValue = Number.isFinite(rawMaxValue) ? rawMaxValue : 1500
+
 
   // Calculate the innerWidth and innerHeight with the margins.
   const innerWidth = width - marginLeft - marginRight;
@@ -151,114 +153,116 @@ export function SpiderGraph(data, minRatingValue, options) {
     return { x: width / 2 + x, y: height / 2 - y };
   }
 
-  // Create the axis and axis labels.
-  const featureData = concepts.map((f, i) => {
-    const angle = Math.PI / 2 + (2 * Math.PI * i) / concepts.length;
-    return {
-      name: f,
-      angle: angle,
-      // @ts-ignore
-      line_coord: angleToCoordinate(angle, maxRatingValue * 1.1),
-      // @ts-ignore
-      label_coord: angleToCoordinate(angle, maxRatingValue * 1.3),
-    };
-  });
+  if(concepts.length > 0) {
+    // Create the axis and axis labels.
+    const featureData = concepts.map((f, i) => {
+      const angle = Math.PI / 2 + (2 * Math.PI * i) / concepts.length;
+      return {
+        name: f,
+        angle: angle,
+        // @ts-ignore
+        line_coord: angleToCoordinate(angle, maxRatingValue * 1.1),
+        // @ts-ignore
+        label_coord: angleToCoordinate(angle, maxRatingValue * 1.3),
+      };
+    });
 
-  // Draw the axis lines.
-  svg
+    // Draw the axis lines.
+    svg
     .selectAll("line")
     .data(featureData)
-    .join((enter) =>
-      enter
-        .append("line")
-        .attr("x1", width / 2)
-        .attr("y1", height / 2)
-        .attr("x2", (d) => d.line_coord.x)
-        .attr("y2", (d) => d.line_coord.y)
-        .attr("stroke", "black")
-    );
+      .join((enter) =>
+        enter
+          .append("line")
+          .attr("x1", width / 2)
+          .attr("y1", height / 2)
+          .attr("x2", (d) => d.line_coord.x)
+          .attr("y2", (d) => d.line_coord.y)
+          .attr("stroke", "black")
+        );
 
-  // Draw the axis labels.
-  svg
+    // Draw the axis labels.
+    svg
     .selectAll(".axislabel")
-    .data(featureData)
-    .join((enter) =>
-      enter
-        .append("text")
-        .attr("x", (d) => d.label_coord.x - 29)
-        .attr("y", (d) => d.label_coord.y + 8)
-        .text((d) => d.name)
-    );
+      .data(featureData)
+      .join((enter) =>
+        enter
+          .append("text")
+          .attr("x", (d) => d.label_coord.x - 29)
+          .attr("y", (d) => d.label_coord.y + 8)
+          .text((d) => d.name)
+      );
 
-  /**
-   * Data visualization.
-   */
-  // Create the spider chart line data.
-  const line = d3
-    .line()
-    // @ts-ignore
-    .x((d) => d.x)
-    // @ts-ignore
-    .y((d) => d.y)
-    .curve(d3.curveLinearClosed);
+      /**
+     * Data visualization.
+      */
+     // Create the spider chart line data.
+     const line = d3
+     .line()
+     // @ts-ignore
+     .x((d) => d.x)
+     // @ts-ignore
+     .y((d) => d.y)
+     .curve(d3.curveLinearClosed);
+    
+     /**
+      * Calculates the coordinates per data point.
+      * @param {object} data_point
+      * @returns {{x: number, y: number}[]} - The coordinates of the data point.
+     */
+    function getPathCoordinates(data_point) {
+      const coordinates = concepts.map((concept, index) => {
+        const angle = Math.PI / 2 + (2 * Math.PI * index) / concepts.length;
+        // @ts-ignore
+        return angleToCoordinate(angle, data_point[concept]);
+      });
+      return coordinates;
+    }
 
-  /**
-   * Calculates the coordinates per data point.
-   * @param {object} data_point
-   * @returns {{x: number, y: number}[]} - The coordinates of the data point.
-   */
-  function getPathCoordinates(data_point) {
-    const coordinates = concepts.map((concept, index) => {
-      const angle = Math.PI / 2 + (2 * Math.PI * index) / concepts.length;
-      // @ts-ignore
-      return angleToCoordinate(angle, data_point[concept]);
-    });
-    return coordinates;
-  }
-
-  // Draw the spider chart data lines.
-  svg
+    // Draw the spider chart data lines.
+    svg
     .selectAll("path")
     .data([data])
     // @ts-ignore
     .join((enter) =>
       enter
-        .append("path")
-        .datum((d) => getPathCoordinates(d))
-        // @ts-ignore
-        .attr("d", line)
-        .attr("stroke-width", 2)
-        .attr("stroke", color)
-        .attr("fill", color)
-        .attr("stroke-opacity", 0.6)
-        .attr("fill-opacity", 0.25)
-    );
+          .append("path")
+          .datum((d) => getPathCoordinates(d))
+          // @ts-ignore
+          .attr("d", line)
+          .attr("stroke-width", 2)
+          .attr("stroke", color)
+          .attr("fill", color)
+          .attr("stroke-opacity", 0.6)
+          .attr("fill-opacity", 0.25)
+        );
 
-  // Draw circles at every data point and add a tooltip.
-  svg
-    .selectAll("circle.data-point")
-    .data([data])
-    .join("g") // Create a group for each data point
-    .selectAll("circle")
-    .data((d, i) =>
-      getPathCoordinates(d).map((coord, i) => ({
-        ...coord,
-        concept: concepts[i],
-        // @ts-ignore
-        value: d[concepts[i]],
-      }))
-    )
-    .join("circle")
-    .attr("class", "data-point")
-    .attr("cx", (d) => d.x)
-    .attr("cy", (d) => d.y)
-    .attr("r", 3)
-    .attr("fill", color)
-    .attr("stroke", color)
-    .attr("stroke-width", 1)
-    .attr("opacity", 0.6)
-    .on("mouseover", (event, d) =>
-      showTooltip(tooltip, event, setTooltip(d.concept, d.value))
+        // Draw circles at every data point and add a tooltip.
+        svg
+      .selectAll("circle.data-point")
+      .data([data])
+      .join("g") // Create a group for each data point
+      .selectAll("circle")
+      .data((d, _i) =>
+        getPathCoordinates(d).map((coord, i) => ({
+          ...coord,
+          concept: concepts[i],
+          // @ts-ignore
+          value: d[concepts[i]],
+        }))
+      )
+      .join("circle")
+      .attr("class", "data-point")
+      .attr("cx", (d) => d.x)
+      .attr("cy", (d) => d.y)
+      .attr("r", 3)
+      .attr("fill", color)
+      .attr("stroke", color)
+      .attr("stroke-width", 1)
+      .attr("opacity", 0.6)
+      .on("mouseover", (event, d) =>
+        showTooltip(tooltip, event, setTooltip(d.concept, d.value))
     )
     .on("mouseout", () => hideTooltip(tooltip));
+  }
 }
